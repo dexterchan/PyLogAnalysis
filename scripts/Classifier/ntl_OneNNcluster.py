@@ -63,8 +63,8 @@ class ntl_OneNNcluser:
             else:
                 clusterName="C" + str(likeSample[0])
                 
-                likeSet=self.clusterSet[clusterName]
-                if(likeSet != null):
+                if(clusterName in self.clusterSet):
+                    likeSet=self.clusterSet[clusterName]
                     likeSet.append(i)
                 
                    
@@ -94,6 +94,7 @@ class ntl_OneNNcluser:
         
         fo.write ("with Cluster:\n")
         clusterNames = self.clusterSet.keys()
+        clusterNames.sort()
         for cn in clusterNames:
             fo.write(cn+":")
             for member in self.clusterSet[cn]:

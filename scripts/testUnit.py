@@ -5,6 +5,18 @@ Created on Jan 14, 2017
 '''
 from Classifier.ntl_OneNNcluster import ntl_OneNNcluser 
 from logSniffer import *
+import argparse
+
+
+parser = argparse.ArgumentParser(__file__, description="NLTK tester")
+
+parser.add_argument("--input", "-i", dest='inputFile', help="Input a file" )
+parser.add_argument("--output", "-o", dest='outputFile', help="Write to output file")
+
+
+args = parser.parse_args()
+fname=args.inputFile
+oFile=args.outputFile
 
 def PrintModel(m):
     
@@ -19,7 +31,7 @@ def testSentenceDataInsert():
     print (m) 
     return
 
-def testLogSniffer(fileName):
+def testLogSniffer(fileName,oFile):
     pattern = ["STATUS","ISO_DATE","MESSAGE"]
     StatusInterested = ["ERROR"]
     
@@ -27,11 +39,13 @@ def testLogSniffer(fileName):
     logSniffer = LogSniffer(pattern,classifier)
     
     logSniffer.setupModelFromLogFile(fileName, StatusInterested)
-    
+    classifier.printModel(oFile)
     
     return
 
 fileName="/Users/dexter/TravelFxConvert/TravelFxConvertCore/logs/TravelFxConvertRestful.log"
-testLogSniffer(fileName)
+if (fname is not None):
+    fileName=fname
+testLogSniffer(fileName,oFile)
 
 #testSentenceDataInsert()

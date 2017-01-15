@@ -55,10 +55,6 @@ class LogSniffer:
                         self.classifier.InsertData(logDict["MESSAGE"])
         m=self.classifier.buildModelFromTrainingData1D()
         logging.info("Model trained with "+str(len(self.classifier.trainingData)))
-        self.classifier.printModel("output1DCluster.txt")
-        
-        
-        
         
         
         return
