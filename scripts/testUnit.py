@@ -4,6 +4,11 @@ Created on Jan 14, 2017
 @author: dexter
 '''
 from Classifier.ntl_OneNNcluster import ntl_OneNNcluser 
+from logSniffer import *
+
+def PrintModel(m):
+    
+    return
 
 def testSentenceDataInsert():
     classifier = ntl_OneNNcluser("file.txt")
@@ -14,6 +19,19 @@ def testSentenceDataInsert():
     print (m) 
     return
 
+def testLogSniffer(fileName):
+    pattern = ["STATUS","ISO_DATE","MESSAGE"]
+    StatusInterested = ["ERROR"]
+    
+    classifier = ntl_OneNNcluser("file.txt")
+    logSniffer = LogSniffer(pattern,classifier)
+    
+    logSniffer.setupModelFromLogFile(fileName, StatusInterested)
+    
+    
+    return
 
-testSentenceDataInsert()
+fileName="/Users/dexter/TravelFxConvert/TravelFxConvertCore/logs/TravelFxConvertRestful.log"
+testLogSniffer(fileName)
 
+#testSentenceDataInsert()
