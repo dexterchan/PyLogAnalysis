@@ -10,7 +10,7 @@ Created on Jan 14, 2017
 import Models.SentenceLabel
 from  Models.SentenceModel import Sentence
 import numpy as np
-from datashape.coretypes import null
+
 class ntl_OneNNcluser:
     def __init__(self, trainingDataFile):
         '''
@@ -19,7 +19,6 @@ class ntl_OneNNcluser:
         
         self.initialized=False
         self.trainingData=[]
-        self.trainingDataMatrix=null
         self.clusterSet={}
         self.distanceThreshold=0.5
         
