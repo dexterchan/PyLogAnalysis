@@ -10,7 +10,7 @@ Created on Jan 14, 2017
 import Models.SentenceLabel
 from  Models.SentenceModel import Sentence
 import numpy as np
-
+import logging
 class ntl_OneNNcluser:
     def __init__(self, trainingDataFile):
         '''
@@ -38,6 +38,21 @@ class ntl_OneNNcluser:
         newdata.init()
         self.trainingData.append(newdata)
         return
+    
+    def identifyCluster(self, sample):
+        clusterName=None
+        for cName in self.clusterSet.keys():
+            averDist=0
+            seedList = self.clusterSet[cName]
+            for sd in seedList:
+                averDist = averDist + self.trainingData[sd].calculateJaccardDist(sample)
+            averDist = averDist / len(seedList)
+            logging.debug("Class:"+cName+":"+str(averDist))
+            if(averDist<self.distanceThreshold):
+                clusterName=cName
+                break
+        
+        return clusterName
     
     def buildModelFromTrainingData1D(self):
         #calculate distance
