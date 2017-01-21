@@ -6,17 +6,19 @@ Created on Jan 14, 2017
 from Classifier.ntl_OneNNcluster import ntl_OneNNcluser 
 from logSniffer import *
 import argparse
-
+from  Models.SentenceModel import Sentence
 
 parser = argparse.ArgumentParser(__file__, description="NLTK tester")
 
-parser.add_argument("--input", "-i", dest='inputFile', help="Input a file" )
-parser.add_argument("--output", "-o", dest='outputFile', help="Write to output file")
+parser.add_argument("--trainsample", "-s", dest='trainSampleFile', help="Input a training sample file" )
+parser.add_argument("--output", "-o", dest='outputFile', help="Write log to output file")
+parser.add_argument("--modelfile", "-m", dest='modelfile', help="input by model file")
 
 
 args = parser.parse_args()
-fname=args.inputFile
+fname=args.trainSampleFile
 oFile=args.outputFile
+modelFile=args.modelfile
 
 def PrintModel(m):
     
@@ -35,17 +37,30 @@ def testLogSniffer(fileName,oFile):
     pattern = ["ISO_DATE","STATUS","MESSAGE"]
     StatusInterested = ["ERROR"]
     
-    classifier = ntl_OneNNcluser("file.txt")
+    classifier = ntl_OneNNcluser()
     logSniffer = LogSniffer(pattern,classifier)
     
     logSniffer.setupModelFromLogFile(fileName, StatusInterested)
     classifier.printModel(oFile)
+    
+    classifier.saveModel(modelFile)
+    
+    return
+
+def testLoadModel(filename, data):
+    classifier = ntl_OneNNcluser()
+    classifier.loadModel(filename)
+    
+    q=classifier.identifyCluster(Sentence(data))
+    print (q)
+    
+    classifier.saveModel("./newModel.json")
     
     return
 
 fileName="/Users/dexter/TravelFxConvert/TravelFxConvertCore/logs/TravelFxConvertRestful.log"
 if (fname is not None):
     fileName=fname
-testLogSniffer(fileName,oFile)
-
+#testLogSniffer(fileName,oFile)
+testLoadModel("./modelBackup.json","FxRestfulController: UAEIPT not found: unknown")
 #testSentenceDataInsert()

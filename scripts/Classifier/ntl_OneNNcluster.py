@@ -11,8 +11,12 @@ import Models.SentenceLabel
 from  Models.SentenceModel import Sentence
 import numpy as np
 import logging
+import copy
+import json
+from pprint import pprint
+
 class ntl_OneNNcluser:
-    def __init__(self, trainingDataFile):
+    def __init__(self):
         '''
         Constructor
         '''
@@ -26,8 +30,35 @@ class ntl_OneNNcluser:
     def initializeCluster(self):
         return
     
-    def initializeModelFromTrainingDataFile(self, trainingDataFile):
+    def toMap(self):
+        myCopy={}
+        myCopy["clusterSet"] = copy.deepcopy(self.clusterSet)
+        trainingData=[]
+        for s in self.trainingData:
+            trainingData.append(s.mystr)
+        myCopy["trainingData"] = trainingData
+        myCopy["distanceThreshold"]=self.distanceThreshold
         
+        return myCopy
+    
+    def saveModel(self, ModelBackupFile):
+        m = self.toMap()
+        with open(ModelBackupFile, 'w') as fp:
+            json.dump(m, fp)
+        return
+    
+    def loadModel(self, ModelBackupFile):
+        
+        with open(ModelBackupFile,'r') as fr:
+            data = json.load(fr)
+        pprint(data)
+        
+        self.trainingData = []
+        
+        for s in data["trainingData"]:
+            self.trainingData.append(Sentence (s) )
+        self.distanceThreshold = data["distanceThreshold"]
+        self.clusterSet = data["clusterSet"]
         
         
         
@@ -51,8 +82,19 @@ class ntl_OneNNcluser:
             if(averDist<self.distanceThreshold):
                 clusterName=cName
                 break
+        if(clusterName is None):
+            #insert the new issue into training sample
+            self.trainingData.append(sample)
+            inx = self.trainingData.index(sample )
+            self.setupNewCluster(inx)
+        
         
         return clusterName
+    
+    def setupNewCluster (self,inx):
+        clusterName="C" + str(inx)
+        self.clusterSet[ clusterName ] = []
+        self.clusterSet[ clusterName ].append(inx)
     
     def buildModelFromTrainingData1D(self):
         #calculate distance
@@ -71,9 +113,10 @@ class ntl_OneNNcluser:
             #check if there is like element
             if(len(likeSample) == 0):
                 #create new cluster
-                clusterName="C" + str(i)
-                self.clusterSet[ clusterName ] = []
-                self.clusterSet[ clusterName ].append(i)
+                #clusterName="C" + str(i)
+                #self.clusterSet[ clusterName ] = []
+                #self.clusterSet[ clusterName ].append(i)
+                self.setupNewCluster(i)
             else:
                 clusterName="C" + str(likeSample[0])
                 

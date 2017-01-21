@@ -27,32 +27,40 @@ logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s (%(threadName)-2s) %(message)s',
                     )
 
-def initialModel(fileName,oFile):
+def initialModel(sampleInputFile,oFile,modelFile):
     global classifier
     pattern = ["ISO_DATE","STATUS","MESSAGE"]
     StatusInterested = ["ERROR","WARN"]
     
-    classifier = ntl_OneNNcluser("dummy.txt")
-    logSniffer = LogSniffer(pattern,classifier)
-    
-    logSniffer.setupModelFromLogFile(fileName, StatusInterested)
+    classifier = ntl_OneNNcluser()
+    if(sampleInputFile is not None):
+        logSniffer = LogSniffer(pattern,classifier)
+        logSniffer.setupModelFromLogFile(sampleInputFile, StatusInterested)
+        classifier.saveModel(modelFile)
+    else:
+        classifier.loadModel(modelFile)
+        
     classifier.printModel(oFile)
     app.config["CLASSIFIER"]=classifier
     return
 parser = argparse.ArgumentParser(__file__, description="NLTK tester")
-parser.add_argument("--input", "-i", dest='inputFile', help="Input a file" )
-parser.add_argument("--output", "-o", dest='outputFile', help="Write to output file")
+
+parser.add_argument("--trainsample", "-s", dest='trainSampleFile', help="Input a training sample file" )
+parser.add_argument("--output", "-o", dest='outputFile', help="Write log to output file")
+parser.add_argument("--modelfile", "-m", dest='modelfile', help="input by model file")
+
 args = parser.parse_args()
-fname=args.inputFile
+fname=args.trainSampleFile
 oFile=args.outputFile
+modelFile=args.modelfile
     
 fileName="output1DCluster.txt"
 if (oFile is None):
         oFile=fileName
-if ( fname is None):
-        logging.error("No initial error log sample file in parameter --input")
+#if ( fname is None):
+#        logging.error("No initial error log sample file in parameter --input")
         
-initialModel(fname,oFile)
+initialModel(fname,oFile,modelFile)
 
 
 @app.route('/submitlog', methods=['POST'])
