@@ -1,10 +1,11 @@
-ERROR 2016-12-30 16:27:54,435 - FxRateUpdaterThread: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://www.apilayer.ne/api/live": www.apilayer.ne: nodename nor servname provided, or not known; nested exception is java.net.UnknownHostException: www.apilayer.ne: nodename nor servname provided, or not known FxRateUpdaterThread.java 88 
-ERROR 2016-12-30 16:28:23,061 - FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
-ERROR 2016-12-30 16:28:32,715 - FxRestfulController: USDJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
-ERROR 2016-12-30 16:28:37,535 - FxRestfulController: USDEUR not found: Graph must contain the end vertex! FxRestfulController.java 64 
-ERROR 2016-12-30 16:28:43,454 - FxRestfulController: EURJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
-ERROR 2016-12-30 16:30:50,871 - FxRestfulController: EURDKK not found: Graph must contain the end vertex! FxRestfulController.java 64 
-ERROR 2016-12-31 10:48:54,606 - DirectJDKLog: Failed to start end point associated with ProtocolHandler [http-nio-8080] DirectJDKLog.java 181 
-ERROR 2016-12-31 18:32:17,187 - FxRestfulController: USDJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
-ERROR 2016-12-31 18:39:00,828 - FxRestfulController: CADCAD not found: ccy1 and ccy2 should not be the same FxRestfulController.java 64 
-ERROR 2016-12-31 18:39:40,268 - FxRestfulController: JPYJPY not found: ccy1 and ccy2 should not be the same FxRestfulController.java 64 
+2016-12-30 16:27:54,435 ERROR - FxRateUpdaterThread: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://www.apilayer.ne/api/live": www.apilayer.ne: nodename nor servname provided, or not known; nested exception is java.net.UnknownHostException: www.apilayer.ne: nodename nor servname provided, or not known FxRateUpdaterThread.java 88 
+2016-12-30 16:28:23,061 ERROR - FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
+2016-12-30 16:28:32,715 ERROR - FxRestfulController: USDJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
+2016-12-30 16:28:37,535 ERROR - FxRestfulController: USDEUR not found: Graph must contain the end vertex! FxRestfulController.java 64 
+2016-12-30 16:28:43,454 ERROR - FxRestfulController: EURJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
+2016-12-30 16:30:50,871 ERROR - FxRestfulController: EURDKK not found: Graph must contain the end vertex! FxRestfulController.java 64 
+2016-12-31 10:48:54,606 ERROR - DirectJDKLog: Failed to start end point associated with ProtocolHandler [http-nio-8080] DirectJDKLog.java 181 
+2016-12-31 18:32:17,187 ERROR - FxRestfulController: USDJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
+2016-12-31 18:39:00,828 ERROR - FxRestfulController: CADCAD not found: ccy1 and ccy2 should not be the same FxRestfulController.java 64 
+2016-12-31 18:39:40,268 ERROR - FxRestfulController: JPYJPY not found: ccy1 and ccy2 should not be the same FxRestfulController.java 64 
+2017-01-21 12:57:35,294 INFO - FxRestfulController: Request Quote CHF/HKD FxRestfulController.java 53 

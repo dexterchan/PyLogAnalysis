@@ -32,7 +32,7 @@ def testSentenceDataInsert():
     return
 
 def testLogSniffer(fileName,oFile):
-    pattern = ["STATUS","ISO_DATE","MESSAGE"]
+    pattern = ["ISO_DATE","STATUS","MESSAGE"]
     StatusInterested = ["ERROR"]
     
     classifier = ntl_OneNNcluser("file.txt")
