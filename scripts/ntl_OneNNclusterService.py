@@ -62,6 +62,19 @@ if (oFile is None):
         
 initialModel(fname,oFile,modelFile)
 
+@app.route('/dumpModel', methods=['GET'])
+def dumpModel():
+    m = classifier.toMap()
+    
+    return Response(json.dumps(m),  mimetype='application/json')
+
+
+@app.route('/getSystemStatus', methods=['GET'])
+def getSystemStatus():
+    LogAnalyzeStatus["NumCluster"] = len(classifier.clusterSet)
+    
+    return Response(json.dumps(LogAnalyzeStatus),  mimetype='application/json')
+
 
 @app.route('/submitlog', methods=['POST'])
 def submitLog():
@@ -76,12 +89,14 @@ def submitLog():
     
     cName=classifier.identifyCluster(newdata)
     StatusResult={}
+    LogAnalyzeStatus["TodayNumIssue"]=LogAnalyzeStatus["TodayNumIssue"]+1
     if(cName is not None):
         StatusResult["found"]=True
         StatusResult["cluster"]=cName
     else:
         StatusResult["found"]=False
         StatusResult["cluster"]="NoClass"
+        LogAnalyzeStatus["TodayUnknownIssue"]=LogAnalyzeStatus["TodayUnknownIssue"]+1
     
     return Response(json.dumps(StatusResult),  mimetype='application/json')
     #return jsonify({'ret': LogAnalyzeStatus}), 201
