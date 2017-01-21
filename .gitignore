@@ -1,2 +1,8 @@
 
 *.pyc
+
+modelBackup.json
+
+newModel.json
+
+output1DCluster.txt
