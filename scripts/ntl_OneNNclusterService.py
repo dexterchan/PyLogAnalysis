@@ -65,15 +65,18 @@ initialModel(fname,oFile,modelFile)
 @app.route('/dumpModel', methods=['GET'])
 def dumpModel():
     m = classifier.toMap()
-    
-    return Response(json.dumps(m),  mimetype='application/json')
+    r=Response(json.dumps(m),  mimetype='application/json')
+    r.headers['Access-Control-Allow-Origin'] = '*'
+    return r
 
 
 @app.route('/getSystemStatus', methods=['GET'])
 def getSystemStatus():
     LogAnalyzeStatus["NumCluster"] = len(classifier.clusterSet)
-    
-    return Response(json.dumps(LogAnalyzeStatus),  mimetype='application/json')
+    #add header "Access-Control-Allow-Origin"
+    r = Response(json.dumps(LogAnalyzeStatus),  mimetype='application/json')
+    r.headers['Access-Control-Allow-Origin'] = '*'
+    return r
 
 
 @app.route('/submitlog', methods=['POST'])
@@ -97,9 +100,10 @@ def submitLog():
         StatusResult["found"]=False
         StatusResult["cluster"]="NoClass"
         LogAnalyzeStatus["TodayUnknownIssue"]=LogAnalyzeStatus["TodayUnknownIssue"]+1
+    r = Response(json.dumps(StatusResult),  mimetype='application/json')
     
-    return Response(json.dumps(StatusResult),  mimetype='application/json')
-    #return jsonify({'ret': LogAnalyzeStatus}), 201
+    r.headers['Access-Control-Allow-Origin'] = '*'
+    return r
 
 
 if __name__ == '__main__':
