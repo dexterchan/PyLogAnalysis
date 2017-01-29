@@ -8,6 +8,24 @@ from logSniffer import *
 import argparse
 from  Models.SentenceModel import Sentence
 
+from Models.ProdIssueIncidentModel import *
+
+import logging
+import logging.handlers
+
+LOGFILE = "Testing.log"
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s (%(threadName)-2s) %(message)s',
+                    )
+logger = logging.getLogger("")
+logger.setLevel(logging.DEBUG)
+handler = logging.handlers.RotatingFileHandler(
+    LOGFILE, maxBytes=(1048576*5), backupCount=7
+)
+formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+handler.setFormatter(formatter)
+logger.addHandler(handler)
+
 parser = argparse.ArgumentParser(__file__, description="NLTK tester")
 
 parser.add_argument("--trainsample", "-s", dest='trainSampleFile', help="Input a training sample file" )
@@ -58,9 +76,30 @@ def testLoadModel(filename, data):
     
     return
 
+def testIncidentTicket():
+    classifier = ntl_OneNNcluser()
+    classifier.loadModel("./modelBackup.json")
+    
+    testIncident = IncidentTicket("123","NEW")
+    testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
+    incidentService = IncidentTicketService(classifier)
+    incidentService.addNewIncident(testIncident)
+    
+    
+    testIncident = IncidentTicket("123","NEW")
+    testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
+    testIncident.solution="add ccy"
+    incidentService.addNewIncident(testIncident)
+    incidentService = incidentService
+    
+    return
+
+
 fileName="/Users/dexter/TravelFxConvert/TravelFxConvertCore/logs/TravelFxConvertRestful.log"
 if (fname is not None):
     fileName=fname
 #testLogSniffer(fileName,oFile)
-testLoadModel("./modelBackup.json","FxRestfulController: UAEIPT not found: unknown")
+#testLoadModel("./modelBackup.json","FxRestfulController: UAEIPT not found: unknown")
 #testSentenceDataInsert()
+
+testIncidentTicket()

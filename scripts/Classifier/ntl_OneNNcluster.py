@@ -5,9 +5,6 @@ Created on Jan 14, 2017
 '''
 
 
-
-
-import Models.SentenceLabel
 from  Models.SentenceModel import Sentence
 import numpy as np
 import logging
@@ -71,6 +68,9 @@ class ntl_OneNNcluser:
         return
     
     def identifyCluster(self, sample):
+        if(type (sample) is str):
+            sample = Sentence(sample)
+        
         clusterName=None
         for cName in self.clusterSet.keys():
             averDist=0
