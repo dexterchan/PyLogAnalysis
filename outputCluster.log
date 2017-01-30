@@ -1,0 +1,26 @@
+S0:FxRateUpdaterThread: org.springframework.web.client.ResourceAccessException: I/O error on GET request for "http://www.apilayer.ne/api/live": www.apilayer.ne: nodename nor servname provided, or not known; nested exception is java.net.UnknownHostException: www.apilayer.ne: nodename nor servname provided, or not known FxRateUpdaterThread.java 88 
+S1:FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
+S2:FxRestfulController: USDJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
+S3:FxRestfulController: USDEUR not found: Graph must contain the end vertex! FxRestfulController.java 64 
+S4:FxRestfulController: EURJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
+S5:FxRestfulController: EURDKK not found: Graph must contain the end vertex! FxRestfulController.java 64 
+S6:DirectJDKLog: Failed to start end point associated with ProtocolHandler [http-nio-8080] DirectJDKLog.java 181 
+S7:FxRestfulController: USDJPY not found: Graph must contain the end vertex! FxRestfulController.java 64 
+S8:FxRestfulController: CADCAD not found: ccy1 and ccy2 should not be the same FxRestfulController.java 64 
+S9:FxRestfulController: JPYJPY not found: ccy1 and ccy2 should not be the same FxRestfulController.java 64 
+with Jaccord Distance:
+0.0,0.951219512195,0.951219512195,0.951219512195,0.951219512195,0.951219512195,0.976744186047,0.951219512195,0.951219512195,0.951219512195
+0.951219512195,0.0,0.133333333333,0.133333333333,0.133333333333,0.133333333333,0.925925925926,0.133333333333,0.666666666667,0.666666666667
+0.951219512195,0.133333333333,0.0,0.133333333333,0.133333333333,0.133333333333,0.925925925926,0.0,0.666666666667,0.666666666667
+0.951219512195,0.133333333333,0.133333333333,0.0,0.133333333333,0.133333333333,0.925925925926,0.133333333333,0.666666666667,0.666666666667
+0.951219512195,0.133333333333,0.133333333333,0.133333333333,0.0,0.133333333333,0.925925925926,0.133333333333,0.666666666667,0.666666666667
+0.951219512195,0.133333333333,0.133333333333,0.133333333333,0.133333333333,0.0,0.925925925926,0.133333333333,0.666666666667,0.666666666667
+0.976744186047,0.925925925926,0.925925925926,0.925925925926,0.925925925926,0.925925925926,0.0,0.925925925926,0.964285714286,0.964285714286
+0.951219512195,0.133333333333,0.0,0.133333333333,0.133333333333,0.133333333333,0.925925925926,0.0,0.666666666667,0.666666666667
+0.951219512195,0.666666666667,0.666666666667,0.666666666667,0.666666666667,0.666666666667,0.964285714286,0.666666666667,0.0,0.133333333333
+0.951219512195,0.666666666667,0.666666666667,0.666666666667,0.666666666667,0.666666666667,0.964285714286,0.666666666667,0.133333333333,0.0
+with Cluster:
+C0:0,
+C1:1,2,3,4,5,7,
+C6:6,
+C8:8,9,

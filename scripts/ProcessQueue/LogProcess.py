@@ -43,7 +43,7 @@ class LogClassReportExtractor:
         logAlert["ORGMSG"] = logM.MESSAGE
         logAlert["ISO_DATE"]=logM.ISO_DATE
         logAlert["STATUS"]=logM.STATUS
-        logAlert["LogClass"] = logM.ClassName
+        
         if(logM.ClassName is  None):
             cName = self.ntl_OneNNcluserInstance.identifyCluster(Sentence(logM.MESSAGE))
             logM.ClassName=cName
@@ -53,5 +53,5 @@ class LogClassReportExtractor:
                 logAlert["relatedIncident"]=[]
                 for incident in incidentList:
                     logAlert["relatedIncident"].append(self.incidentTicketServiceImpl.incidentTicketMap [incident].__dict__)
-        
+        logAlert["LogClass"] = logM.ClassName
         return logAlert

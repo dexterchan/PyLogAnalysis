@@ -35,7 +35,7 @@ parser = argparse.ArgumentParser(__file__, description="NLTK tester")
 parser.add_argument("--trainsample", "-s", dest='trainSampleFile', help="Input a training sample file" )
 parser.add_argument("--output", "-o", dest='outputFile', help="Write log to output file")
 parser.add_argument("--modelfile", "-m", dest='modelfile', help="input by model file")
-
+parser.add_argument("--incidentfile", "-i", dest='incidentfile', help="input by incident file")
 
 args = parser.parse_args()
 fname=args.trainSampleFile
@@ -166,7 +166,7 @@ def saveIncidentMap():
     incidentService.addNewIncident(testIncident,classifier)
     
     
-    testIncident = IncidentTicket("456","NEW")
+    testIncident = IncidentTicket("987","NEW")
     testIncident.errorLog="FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64"
     incidentService.addNewIncident(testIncident,classifier)
     

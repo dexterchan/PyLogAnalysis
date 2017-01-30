@@ -1,0 +1,20 @@
+2017-01-30 22:53:53,956 - root - INFO - Model trained with 10
+2017-01-30 22:54:56,749 - root - INFO - Model trained with 10
+2017-01-30 22:59:56,046 - root - INFO - Model trained with 10
+2017-01-30 22:59:56,084 - werkzeug - INFO -  * Running on http://0.0.0.0:8082/ (Press CTRL+C to quit)
+2017-01-30 22:59:56,087 - werkzeug - INFO -  * Restarting with stat
+2017-01-30 22:59:57,435 - root - INFO - Model trained with 10
+2017-01-30 22:59:57,447 - werkzeug - WARNING -  * Debugger is active!
+2017-01-30 22:59:57,469 - werkzeug - INFO -  * Debugger pin code: 315-923-898
+2017-01-30 23:00:22,978 - root - DEBUG - Class:C8:0.25
+2017-01-30 23:00:22,978 - werkzeug - INFO - 127.0.0.1 - - [30/Jan/2017 23:00:22] "POST /queryIncidentFromLog HTTP/1.1" 200 -
+2017-01-30 23:00:53,086 - werkzeug - INFO - 127.0.0.1 - - [30/Jan/2017 23:00:53] "GET /dumpModel HTTP/1.1" 200 -
+2017-01-30 23:12:10,920 - root - INFO - Model trained with 10
+2017-01-30 23:12:37,581 - root - INFO - Model trained with 10
+2017-01-30 23:12:37,597 - werkzeug - INFO -  * Running on http://0.0.0.0:8082/ (Press CTRL+C to quit)
+2017-01-30 23:12:37,598 - werkzeug - INFO -  * Restarting with stat
+2017-01-30 23:12:38,984 - root - INFO - Model trained with 10
+2017-01-30 23:12:39,002 - werkzeug - WARNING -  * Debugger is active!
+2017-01-30 23:12:39,034 - werkzeug - INFO -  * Debugger pin code: 315-923-898
+2017-01-30 23:12:46,422 - root - DEBUG - Class:C8:0.25
+2017-01-30 23:12:46,423 - werkzeug - INFO - 127.0.0.1 - - [30/Jan/2017 23:12:46] "POST /queryIncidentFromLog HTTP/1.1" 200 -

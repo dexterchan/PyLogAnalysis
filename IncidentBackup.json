@@ -1,1 +1,41 @@
-{"Incident2ProdIssueMap": {"123": "C10", "456": "C8"}, "incidentTicketMap": {"123": {"status": "NEW", "causeAnalysis": "", "incidentId": "123", "errorLog": "FxRestfulController: UAEIPT not found: unknown", "solution": ""}, "456": {"status": "NEW", "causeAnalysis": "", "incidentId": "456", "errorLog": "FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64", "solution": ""}}, "ProdIssue2IncidentMap": {"C8": ["456"], "C10": ["123”]}}
+{
+	"Incident2ProdIssueMap": {
+		"123": "C10",
+		"987": "C1",
+		"456": "C8"
+	},
+	"incidentTicketMap": {
+		"123": {
+			"status": "NEW",
+			"causeAnalysis": "",
+			"incidentId": "123",
+			"errorLog": "FxRestfulController: UAEIPT not found: unknown",
+			"solution": ""
+		},
+		"987": {
+			"status": "NEW",
+			"causeAnalysis": "",
+			"incidentId": "987",
+			"errorLog": "FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64",
+			"solution": ""
+		},
+		"456": {
+			"status": "NEW",
+			"causeAnalysis": "",
+			"incidentId": "456",
+			"errorLog": "FxRestfulController: USDUSD not found: ccy1 and ccy2 should not be the same FxRestfulController.java 208",
+			"solution": ""
+		}
+	},
+	"ProdIssue2IncidentMap": {
+		"C8": [
+			"456"
+		],
+		"C1": [
+			"987"
+		],
+		"C10": [
+			"123"
+		]
+	}
+}
