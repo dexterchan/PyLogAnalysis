@@ -124,15 +124,15 @@ def submitLog():
     if ("STATUS" in reqMap.keys() ):
         logM.STATUS = reqMap["STATUS"]
     else:
-        abort(402)
+        abort(401)
     if ("MESSAGE" in reqMap.keys() ):
         logM.MESSAGE = reqMap["MESSAGE"]
     else:
-        abort(402)
+        abort(401)
     if ("ISO_DATE" in reqMap.keys() ):
         logM.ISO_DATE = reqMap["ISO_DATE"]
     else:
-        abort(402)
+        abort(401)
     
     logM.ClassName=classifier.identifyCluster(newdata)
     app.config["LogQueuePublisher"].queueIssue(logM)
@@ -161,12 +161,12 @@ def submitIncident():
     #    self.errorLog=""
     #    self.solution=""
     if("incidentId" not in reqMap):
-        abort(401)
+        abort(403)
     else:
         incidentId = reqMap["incidentId"]
     
     if("status" not in reqMap):
-        abort(401)
+        abort(403)
     else:
         status = reqMap["status"]
     
@@ -200,11 +200,11 @@ def queryIncidentFromLog():
     if ("STATUS" in reqMap.keys() ):
         logM.STATUS = reqMap["STATUS"]
     else:
-        abort(402)
+        abort(403)
     if ("MESSAGE" in reqMap.keys() ):
         logM.MESSAGE = reqMap["MESSAGE"]
     else:
-        abort(402)
+        abort(403)
     if ("ISO_DATE" in reqMap.keys() ):
         logM.ISO_DATE = reqMap["ISO_DATE"]
     else:
@@ -233,7 +233,7 @@ def send_css(path):
 def inCompleteIncident(error):
     return make_response(jsonify({'incident ticket': 'incomplete incidentId and Status'}), 401)
 
-@app.errorhandler(402)
+@app.errorhandler(403)
 def inCompleteLog(error):
     return make_response(jsonify({'Log ticket': 'incomplete STATUS and MESSAGE'}), 402)
 
