@@ -17,12 +17,15 @@ import logging.handlers
 
 
 from Models.SystemStatus import *
+from Models.LogMessage import *
 from Classifier.ntl_OneNNcluster import ntl_OneNNcluser 
 from logSniffer import *
 import argparse
 from Models.SentenceModel import Sentence
 from Models.ProdIssueIncidentModel import *
 
+from Models.LogMessage import *
+from ProcessQueue.LogProcess import  *
 # Initialize the Flask application
 app = Flask(__name__, static_url_path='/static')
 
@@ -39,7 +42,7 @@ formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(messag
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-def initialModel(sampleInputFile,oFile,modelFile):
+def initialModel(sampleInputFile,oFile,modelFile,incidentfile):
     global classifier
     pattern = ["ISO_DATE","STATUS","MESSAGE"]
     StatusInterested = ["ERROR","WARN"]
@@ -54,19 +57,32 @@ def initialModel(sampleInputFile,oFile,modelFile):
         
     classifier.printModel(oFile)
     app.config["CLASSIFIER"]=classifier
-    incidentService = IncidentTicketService(classifier)
+    incidentService = IncidentTicketService()
+    if(incidentfile is not None):
+        incidentService.loadModel(incidentfile)
     app.config["INCIDENTSERVICE"]=incidentService
+    
+    logQPublisher = LogQueuePublisher(None)
+    app.config["LogQueuePublisher"]=logQPublisher
+    
+    
+    logClassExtractor = LogClassReportExtractor(classifier, incidentService)
+    app.config["LogClassExtractor"]=logClassExtractor
+    
+    
     return
 parser = argparse.ArgumentParser(__file__, description="NLTK tester")
 
 parser.add_argument("--trainsample", "-s", dest='trainSampleFile', help="Input a training sample file" )
 parser.add_argument("--output", "-o", dest='outputFile', help="Write log to output file")
 parser.add_argument("--modelfile", "-m", dest='modelfile', help="input by model file")
+parser.add_argument("--incidentfile", "-i", dest='incidentfile', help="input by incident file")
 
 args = parser.parse_args()
 fname=args.trainSampleFile
 oFile=args.outputFile
 modelFile=args.modelfile
+incidentfile=args.incidentfile
     
 fileName="output1DCluster.txt"
 if (oFile is None):
@@ -74,7 +90,7 @@ if (oFile is None):
 #if ( fname is None):
 #        logging.error("No initial error log sample file in parameter --input")
         
-initialModel(fname,oFile,modelFile)
+initialModel(fname,oFile,modelFile, incidentfile)
 
 @app.route('/dumpModel', methods=['GET'])
 def dumpModel():
@@ -104,12 +120,27 @@ def submitLog():
     newdata = Sentence(reqMap["MESSAGE"])
     newdata.init()
     
-    cName=classifier.identifyCluster(newdata)
+    logM = LogMessage()
+    if ("STATUS" in reqMap.keys() ):
+        logM.STATUS = reqMap["STATUS"]
+    else:
+        abort(402)
+    if ("MESSAGE" in reqMap.keys() ):
+        logM.MESSAGE = reqMap["MESSAGE"]
+    else:
+        abort(402)
+    if ("ISO_DATE" in reqMap.keys() ):
+        logM.ISO_DATE = reqMap["ISO_DATE"]
+    else:
+        abort(402)
+    
+    logM.ClassName=classifier.identifyCluster(newdata)
+    app.config["LogQueuePublisher"].queueIssue(logM)
     StatusResult={}
     LogAnalyzeStatus["TodayNumIssue"]=LogAnalyzeStatus["TodayNumIssue"]+1
-    if(cName is not None):
+    if(logM.ClassName is not None):
         StatusResult["found"]=True
-        StatusResult["cluster"]=cName
+        StatusResult["cluster"]=logM.ClassName
     else:
         StatusResult["found"]=False
         StatusResult["cluster"]="NoClass"
@@ -144,11 +175,44 @@ def submitIncident():
         incTicket.errorLog = reqMap["errorLog"]
     if("solution"  in reqMap):
         incTicket.solution = reqMap["solution"]
+    if("causeAnalysis"  in reqMap):
+        incTicket.causeAnalysis = reqMap["causeAnalysis"]
     
-    cl = app.config["INCIDENTSERVICE"].addNewIncident(incTicket)
+    classifier=app.config["CLASSIFIER"]
+    cl = app.config["INCIDENTSERVICE"].addNewIncident(incTicket,classifier)
     StatusResult={}
     StatusResult["RESULT"]=cl
     r = Response(json.dumps(StatusResult),  mimetype='application/json')
+    
+    r.headers['Access-Control-Allow-Origin'] = '*'
+    return r
+
+@app.route('/queryIncidentFromLog', methods=['POST'])
+def queryIncidentFromLog():
+    #check request is a json
+    if not request.json:
+        abort(400)
+    logClassExtractor=app.config["LogClassExtractor"]
+    
+    reqMap = request.json
+    
+    logM = LogMessage()
+    if ("STATUS" in reqMap.keys() ):
+        logM.STATUS = reqMap["STATUS"]
+    else:
+        abort(402)
+    if ("MESSAGE" in reqMap.keys() ):
+        logM.MESSAGE = reqMap["MESSAGE"]
+    else:
+        abort(402)
+    if ("ISO_DATE" in reqMap.keys() ):
+        logM.ISO_DATE = reqMap["ISO_DATE"]
+    else:
+        abort(402)
+    
+    result= logClassExtractor.extractLogClassSolution(logM)
+    
+    r = Response(json.dumps(result),  mimetype='application/json')
     
     r.headers['Access-Control-Allow-Origin'] = '*'
     return r
@@ -166,8 +230,11 @@ def send_css(path):
     return send_from_directory('static/css/', path)
 
 @app.errorhandler(401)
-def not_found(error):
+def inCompleteIncident(error):
     return make_response(jsonify({'incident ticet': 'incomplete incidentId and Status'}), 401)
+@app.errorhandler(402)
+def inCompleteLog(error):
+    return make_response(jsonify({'Log ticet': 'incomplete STATUS and MESSAGE'}), 402)
 
 if __name__ == '__main__':
     

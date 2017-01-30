@@ -10,8 +10,12 @@ from  Models.SentenceModel import Sentence
 
 from Models.ProdIssueIncidentModel import *
 
+from Models.LogMessage import *
+from ProcessQueue.LogProcess import  *
+
 import logging
 import logging.handlers
+import json
 
 LOGFILE = "Testing.log"
 logging.basicConfig(level=logging.DEBUG,
@@ -82,18 +86,96 @@ def testIncidentTicket():
     
     testIncident = IncidentTicket("123","NEW")
     testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
-    incidentService = IncidentTicketService(classifier)
-    incidentService.addNewIncident(testIncident)
+    incidentService = IncidentTicketService()
+    incidentService.addNewIncident(testIncident,classifier)
     
     
     testIncident = IncidentTicket("123","NEW")
     testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
     testIncident.solution="add ccy"
-    incidentService.addNewIncident(testIncident)
+    incidentService.addNewIncident(testIncident,classifier)
     incidentService = incidentService
     
     return
 
+def testSubmitLogWorkflow():
+    classifier = ntl_OneNNcluser()
+    classifier.loadModel("./modelBackup.json")
+    
+    logM = LogMessage()
+    
+    logM.STATUS = "ERROR"
+    logM.MESSAGE = "FxRestfulController: EUREUR not found: ccy1 and ccy2 should not be the same FxRestfulController.java 208"
+    logM.ISO_DATE = "2016-12-30 16:27:54,435"
+    newdata = Sentence(logM.MESSAGE)
+    logM.ClassName=classifier.identifyCluster(newdata)
+    logPublisher = LogQueuePublisher(None)
+    logPublisher.queueIssue(logM)
+    
+    testIncident = IncidentTicket("123","NEW")
+    testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
+    incidentService = IncidentTicketService()
+    incidentService.addNewIncident(testIncident)
+    
+    logClass = LogClassReportExtractor(classifier, incidentService)
+    result= logClass.extractLogClassSolution(logM)
+    
+    logger.info(json.dumps(result))
+    
+    return
+
+def testSubmitLogWorkflow2():
+    classifier = ntl_OneNNcluser()
+    classifier.loadModel("./modelBackup.json")
+    
+    logM = LogMessage()
+    
+    logM.STATUS = "ERROR"
+    logM.MESSAGE = "FxRestfulController: EUREUR not found: ccy1 and ccy2 should not be the same FxRestfulController.java 208"
+    logM.ISO_DATE = "2016-12-30 16:27:54,435"
+    newdata = Sentence(logM.MESSAGE)
+    #logM.ClassName=classifier.identifyCluster(newdata)
+    logPublisher = LogQueuePublisher(None)
+    logPublisher.queueIssue(logM)
+    
+    
+    incidentService = IncidentTicketService()
+    testIncident = IncidentTicket("123","NEW")
+    testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
+    incidentService.addNewIncident(testIncident,classifier)
+    
+    testIncident = IncidentTicket("456","NEW")
+    testIncident.errorLog="FxRestfulController: USDUSD not found: ccy1 and ccy2 should not be the same FxRestfulController.java 208"
+    incidentService.addNewIncident(testIncident,classifier)
+    
+    logClass = LogClassReportExtractor(classifier, incidentService)
+    result= logClass.extractLogClassSolution(logM)
+    logger.info(json.dumps(result))
+    return
+
+def saveIncidentMap():
+    classifier = ntl_OneNNcluser()
+    classifier.loadModel("./modelBackup.json")
+    incidentService = IncidentTicketService()
+    testIncident = IncidentTicket("123","NEW")
+    testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
+    incidentService.addNewIncident(testIncident,classifier)
+    
+    testIncident = IncidentTicket("456","NEW")
+    testIncident.errorLog="FxRestfulController: USDUSD not found: ccy1 and ccy2 should not be the same FxRestfulController.java 208"
+    incidentService.addNewIncident(testIncident,classifier)
+    
+    
+    testIncident = IncidentTicket("456","NEW")
+    testIncident.errorLog="FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64"
+    incidentService.addNewIncident(testIncident,classifier)
+    
+    incidentService.saveModel("./IncidentBackup.json")
+    
+    incidentService2 = IncidentTicketService()
+    incidentService2.loadModel("./IncidentBackup.json")
+    
+    return
 
 fileName="/Users/dexter/TravelFxConvert/TravelFxConvertCore/logs/TravelFxConvertRestful.log"
 if (fname is not None):
@@ -102,4 +184,6 @@ if (fname is not None):
 #testLoadModel("./modelBackup.json","FxRestfulController: UAEIPT not found: unknown")
 #testSentenceDataInsert()
 
-testIncidentTicket()
+#testIncidentTicket()
+#testSubmitLogWorkflow2()
+saveIncidentMap()
