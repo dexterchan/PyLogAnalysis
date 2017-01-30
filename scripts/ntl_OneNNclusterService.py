@@ -231,10 +231,11 @@ def send_css(path):
 
 @app.errorhandler(401)
 def inCompleteIncident(error):
-    return make_response(jsonify({'incident ticet': 'incomplete incidentId and Status'}), 401)
+    return make_response(jsonify({'incident ticket': 'incomplete incidentId and Status'}), 401)
+
 @app.errorhandler(402)
 def inCompleteLog(error):
-    return make_response(jsonify({'Log ticet': 'incomplete STATUS and MESSAGE'}), 402)
+    return make_response(jsonify({'Log ticket': 'incomplete STATUS and MESSAGE'}), 402)
 
 if __name__ == '__main__':
     
