@@ -2,4 +2,5 @@
 *.pyc
 
 
+runClusterService.log
 output1DCluster.txt
