@@ -14,9 +14,9 @@ from flask import Flask, request, redirect, send_from_directory,Response
 from werkzeug import secure_filename
 import logging
 import logging.handlers
+import httplib2
 
-
-from Models.SystemStatus import *
+from Models.BgSupport import *
 from Models.LogMessage import *
 from Classifier.ntl_OneNNcluster import ntl_OneNNcluser 
 from logSniffer import *
@@ -69,7 +69,7 @@ def initialModel(sampleInputFile,oFile,modelFile,incidentfile):
     logClassExtractor = LogClassReportExtractor(classifier, incidentService)
     app.config["LogClassExtractor"]=logClassExtractor
     
-    
+    logQPublisher.start()
     return
 parser = argparse.ArgumentParser(__file__, description="NLTK tester")
 
@@ -135,7 +135,13 @@ def submitLog():
         abort(401)
     
     logM.ClassName=classifier.identifyCluster(newdata)
-    app.config["LogQueuePublisher"].queueIssue(logM)
+    
+    logClassExtractor=app.config["LogClassExtractor"]
+    result= logClassExtractor.extractLogClassSolution(logM)
+    
+    app.config["LogQueuePublisher"].queueIssue(result)
+    
+    
     StatusResult={}
     LogAnalyzeStatus["TodayNumIssue"]=LogAnalyzeStatus["TodayNumIssue"]+1
     if(logM.ClassName is not None):
@@ -145,9 +151,11 @@ def submitLog():
         StatusResult["found"]=False
         StatusResult["cluster"]="NoClass"
         LogAnalyzeStatus["TodayUnknownIssue"]=LogAnalyzeStatus["TodayUnknownIssue"]+1
-    r = Response(json.dumps(StatusResult),  mimetype='application/json')
+    r = Response(json.dumps(result),  mimetype='application/json')
     
     r.headers['Access-Control-Allow-Origin'] = '*'
+    
+    
     return r
 
 @app.route('/submitIncident', methods=['POST'])

@@ -98,31 +98,7 @@ def testIncidentTicket():
     
     return
 
-def testSubmitLogWorkflow():
-    classifier = ntl_OneNNcluser()
-    classifier.loadModel("./modelBackup.json")
-    
-    logM = LogMessage()
-    
-    logM.STATUS = "ERROR"
-    logM.MESSAGE = "FxRestfulController: EUREUR not found: ccy1 and ccy2 should not be the same FxRestfulController.java 208"
-    logM.ISO_DATE = "2016-12-30 16:27:54,435"
-    newdata = Sentence(logM.MESSAGE)
-    logM.ClassName=classifier.identifyCluster(newdata)
-    logPublisher = LogQueuePublisher(None)
-    logPublisher.queueIssue(logM)
-    
-    testIncident = IncidentTicket("123","NEW")
-    testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
-    incidentService = IncidentTicketService()
-    incidentService.addNewIncident(testIncident)
-    
-    logClass = LogClassReportExtractor(classifier, incidentService)
-    result= logClass.extractLogClassSolution(logM)
-    
-    logger.info(json.dumps(result))
-    
-    return
+
 
 def testSubmitLogWorkflow2():
     classifier = ntl_OneNNcluser()

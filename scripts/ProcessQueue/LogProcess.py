@@ -6,26 +6,73 @@ Created on Jan 29, 2017
 from Models.LogMessage import *
 from Models.ProdIssueIncidentModel import *
 from collections import deque
+import threading
+from Queue import *
+
 import logging
 logger = logging.getLogger("")
 
-class LogQueuePublisher:
+
+
+#===============================================================================
+# class LogBgWork (threading.Thread):
+#     def __init__(self, ReportWebSite):
+#         '''
+#         Constructor
+#         '''
+#         threading.Thread.__init__(self)
+#         self.logQueue=Queue()
+#         self.reportWebSite = ReportWebSite
+#         self.RunStatus=True
+#         return
+#     
+#     def run(self):
+#         
+#         while(self.RunStatus):
+#             log = self.logQueue.get()
+#             logger.info("Dequeue a new log")
+#             self.processLog(log)
+#         return
+#     
+#     def insertLog(self, log):
+#         self.logQueue.put(log)
+#         
+#         return
+#     
+#     def processLog(self, log):
+#         logger.info(log)
+#         
+#         return
+#===============================================================================
+class LogQueuePublisher(threading.Thread):
     def __init__(self, publisher):
         '''
         Constructor
         '''
         self.publisher=publisher
-        self.myQueue = deque()
+        threading.Thread.__init__(self)
+        self.logQueue=Queue()
+        
+        self.RunStatus=True
         return
     
+    def run(self): 
+        while(self.RunStatus):
+            log = self.logQueue.get()
+            logger.info("Dequeue a new log")
+            self.processLog(log)
+        return
     
     def queueIssue(self, logMessage):
-        self.myQueue.append(logMessage)
-        logger.info(logMessage.toString())
+        self.logQueue.put(logMessage)
+        logger.info(logMessage)
         return
-    def dequeueIssue(self):
-        M= self.myQueue.popleft()
-        return M
+    
+    def processLog(self, log):
+        logger.info(log)
+        if (self.publisher is not None):
+            self.publisher.publish(log)
+        return
 
 
 class LogClassReportExtractor:
