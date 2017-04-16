@@ -26,6 +26,8 @@ from Models.ProdIssueIncidentModel import *
 
 from Models.LogMessage import *
 from ProcessQueue.LogProcess import  *
+from ProcessQueue.LogPublisher import  *
+
 # Initialize the Flask application
 app = Flask(__name__, static_url_path='/static')
 
@@ -62,7 +64,10 @@ def initialModel(sampleInputFile,oFile,modelFile,incidentfile):
         incidentService.loadModel(incidentfile)
     app.config["INCIDENTSERVICE"]=incidentService
     
-    logQPublisher = LogQueuePublisher(None)
+    #Instantiate publisher
+    myPublisher=None
+    myPublisher = RestfulPublisher("http://ec2-52-66-21-39.ap-south-1.compute.amazonaws.com/postlog")
+    logQPublisher = LogQueuePublisher(myPublisher)
     app.config["LogQueuePublisher"]=logQPublisher
     
     

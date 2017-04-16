@@ -1,23 +1,23 @@
 {
 	"Incident2ProdIssueMap": {
-		"123": "C10",
+		"001": "C1",
 		"987": "C1",
 		"456": "C8"
 	},
 	"incidentTicketMap": {
-		"123": {
+		"001": {
 			"status": "NEW",
-			"causeAnalysis": "",
-			"incidentId": "123",
-			"errorLog": "FxRestfulController: UAEIPT not found: unknown",
-			"solution": ""
+			"causeAnalysis": "currency pair not found",
+			"incidentId": "001",
+			"errorLog": "EUR/UAE not found: Graph must contain the end vertex!",
+			"solution": "Setup the cooresponding currency pair"
 		},
 		"987": {
 			"status": "NEW",
-			"causeAnalysis": "",
+			"causeAnalysis": "currency pair not found",
 			"incidentId": "987",
 			"errorLog": "FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64",
-			"solution": ""
+			"solution": "Setup the cooresponding currency pair"
 		},
 		"456": {
 			"status": "NEW",
@@ -32,10 +32,7 @@
 			"456"
 		],
 		"C1": [
-			"987"
-		],
-		"C10": [
-			"123"
+			"987","001"
 		]
 	}
 }

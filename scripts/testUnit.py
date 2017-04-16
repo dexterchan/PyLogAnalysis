@@ -153,6 +153,48 @@ def saveIncidentMap():
     
     return
 
+from ProcessQueue.LogPublisher import  *
+def testSubmitLogWorkflowFinal():
+    classifier = ntl_OneNNcluser()
+    classifier.loadModel("./modelBackup.json")
+    
+    logM = LogMessage()
+    
+    logM.STATUS = "ERROR"
+    logM.MESSAGE = "UAE/IPR not found: Graph must contain the end vertex!"
+    logM.ISO_DATE = "2016-12-30 16:27:54,435"
+    newdata = Sentence(logM.MESSAGE)
+    #logM.ClassName=classifier.identifyCluster(newdata)
+    logPublisher = LogQueuePublisher(None)
+    logPublisher.queueIssue(logM)
+    
+    
+    incidentService = IncidentTicketService()
+    testIncident = IncidentTicket("123","NEW")
+    testIncident.errorLog="FxRestfulController: UAEIPT not found: unknown"
+    incidentService.addNewIncident(testIncident,classifier)
+    
+    testIncident = IncidentTicket("456","NEW")
+    testIncident.errorLog="FxRestfulController: USDUSD not found: ccy1 and ccy2 should not be the same FxRestfulController.java 208"
+    incidentService.addNewIncident(testIncident,classifier)
+    
+    testIncident = IncidentTicket("987","NEW")
+    testIncident.errorLog="FxRestfulController: DKKJPY not found: Graph must contain the end vertex! FxRestfulController.java 64"
+    incidentService.addNewIncident(testIncident,classifier)
+    
+    logClass = LogClassReportExtractor(classifier, incidentService)
+    result= logClass.extractLogClassSolution(logM)
+    logger.info(json.dumps(result))
+    
+    p=RestfulPublisher("http://ec2-52-66-21-39.ap-south-1.compute.amazonaws.com/postlog")
+
+    (response,content)=p.publish(result)
+    logger.info (response) 
+    logger.info (content) 
+    
+    return
+
+
 fileName="/Users/dexter/TravelFxConvert/TravelFxConvertCore/logs/TravelFxConvertRestful.log"
 if (fname is not None):
     fileName=fname
@@ -161,5 +203,6 @@ if (fname is not None):
 #testSentenceDataInsert()
 
 #testIncidentTicket()
+#saveIncidentMap()
 #testSubmitLogWorkflow2()
-saveIncidentMap()
+testSubmitLogWorkflowFinal()
